@@ -14,12 +14,12 @@ class Board
     pp = center_indexes
     ww.each do |i|
       wall = Wall.new
-      try_set_block_with_index!(i, wall)
+      set_block_with_index!(i, wall)
     end
     pp.each do |i|
       color = i % 2
       piece = Piece.new(color)
-      try_set_block_with_index!(i, piece)
+      set_block_with_index!(i, piece)
     end
   end
 
@@ -27,7 +27,7 @@ class Board
     get_block_with_index(xy2index(x, y))
   end
 
-  def try_set_pieace_with_xy!(x, y, value)
+  def set_pieace_with_xy!(x, y, value)
     set_block_with_index!(xy2index(x, y), value)
   end
 
@@ -41,19 +41,15 @@ class Board
     @blocks[index]
   end
 
-  def try_set_block_with_index!(index, value)
-    return false if @blocks[index].class != Empty
-
+  def set_block_with_index!(index, value)
     @blocks[index] = value
-    true
   end
 
   def xy2index(x, y)
     line = (y + 1) * @board_len # 行
     row  = (x + 1) # 列
     index = line + row # index
-    raise "Bigger X. x=#{x}" unless x < @pirce_len
-    raise "Bigger Y. y=#{y}" unless y < @pirce_len
+    raise "Smaller Length. index=#{index}" unless index >= 0
     raise "Bigger Length. index=#{index}" unless index < @board_len * @board_len
 
     index
