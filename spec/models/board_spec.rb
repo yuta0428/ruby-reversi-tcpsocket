@@ -26,14 +26,14 @@ describe Board do
   end
 
   it 'is valid xy2index' do
-    expect(@obj.send(:xy2index, 0, 0)).to eq 0
-    expect(@obj.send(:xy2index, 1, 1)).to eq 7
-    expect(@obj.send(:xy2index, 0, 2)).to eq 12
-    expect(@obj.send(:xy2index, 2, 3)).to eq 20
-    expect(@obj.send(:xy2index, 3, 1)).to eq 9
+    expect(@obj.xy2index(0, 0)).to eq 0
+    expect(@obj.xy2index(1, 1)).to eq 7
+    expect(@obj.xy2index(0, 2)).to eq 12
+    expect(@obj.xy2index(2, 3)).to eq 20
+    expect(@obj.xy2index(3, 1)).to eq 9
   end
 
   it 'is valid get_center_indexes' do
-    expect(@obj.send(:center_indexes)).to eq [14, 15, 20, 21]
+    expect(@obj.center_indexes).to eq [14, 15, 20, 21]
   end
 end

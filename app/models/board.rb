@@ -23,6 +23,10 @@ class Board
     end
   end
 
+  def update!
+    # update board
+  end
+
   def get_pieace_with_xy(x, y)
     get_block_with_index(xy2index(x, y))
   end
@@ -30,12 +34,6 @@ class Board
   def set_pieace_with_xy!(x, y, value)
     set_block_with_index!(xy2index(x, y), value)
   end
-
-  def update!
-    # update board
-  end
-
-  private
 
   def get_block_with_index(index)
     @blocks[index]
