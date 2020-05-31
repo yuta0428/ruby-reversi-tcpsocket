@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require './app/models/block'
+require './app/models/cell'
 
 # Board
 class Board
