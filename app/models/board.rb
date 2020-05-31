@@ -46,8 +46,8 @@ class Board
   end
 
   def xy2index(x, y)
-    line = (y + 1) * @board_len # 行
-    row  = (x + 1) # 列
+    line = y * @board_len # 行
+    row  = x # 列
     index = line + row # index
     raise "Smaller Length. index=#{index}" unless index >= 0
     raise "Bigger Length. index=#{index}" unless index < @board_len * @board_len
@@ -67,7 +67,7 @@ class Board
 
   def center_indexes
     len = @pirce_len
-    half_len = len / 2 - 1
+    half_len = len / 2
     p1 = xy2index(half_len, half_len)
     p2 = p1 + 1
     p4 = xy2index(half_len + 1, half_len + 1)

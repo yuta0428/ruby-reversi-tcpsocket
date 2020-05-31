@@ -11,13 +11,13 @@ require './app/models/board'
 # 24 25 26 27 28 29
 # 30 31 32 33 34 35
 
-# xy(i=-1)
-# ii 0i 1i 2i 3i 4i
-# i0 00 10 20 30 40
-# i1 01 11 21 31 41
-# i2 02 12 22 32 42
-# i3 03 13 23 33 43
-# i4 04 14 24 34 44
+# xy
+# 00 10 20 30 40 50
+# 01 11 21 31 41 51
+# 02 12 22 32 42 52
+# 03 13 23 33 43 53
+# 04 14 24 34 44 54
+# 05 15 25 35 45 55
 
 describe Board do
   before do
@@ -26,10 +26,11 @@ describe Board do
   end
 
   it 'is valid xy2index' do
-    expect(@obj.send(:xy2index, 0, 0)).to eq 7
-    expect(@obj.send(:xy2index, 0, 2)).to eq 19
-    expect(@obj.send(:xy2index, 2, 3)).to eq 27
-    expect(@obj.send(:xy2index, 3, 1)).to eq 16
+    expect(@obj.send(:xy2index, 0, 0)).to eq 0
+    expect(@obj.send(:xy2index, 1, 1)).to eq 7
+    expect(@obj.send(:xy2index, 0, 2)).to eq 12
+    expect(@obj.send(:xy2index, 2, 3)).to eq 20
+    expect(@obj.send(:xy2index, 3, 1)).to eq 9
   end
 
   it 'is valid get_center_indexes' do
