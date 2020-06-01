@@ -124,4 +124,13 @@ describe BoardController do
       expect(@obj.flip_cell_indexes_with_dir(3, 1, Piece::BLACK, 0, 1)).to eq []
     end
   end
+
+  context 'is valid try_set_cell_with_xy' do
+    let(:board) { Board.new(@len) }
+    it 'is try_set_cell_with_xy' do
+      expect(@obj.get_cell_with_xy(2, 3).color).to eq Piece::BLACK
+      @obj.try_set_cell_with_xy!(2, 4, Piece.new(Piece::WHITE))
+      expect(@obj.get_cell_with_xy(2, 3).color).to eq Piece::WHITE
+    end
+  end
 end

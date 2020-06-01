@@ -23,8 +23,11 @@ class Board
     end
   end
 
-  def update!
-    # update board
+  def update!(color, indexes)
+    piece = Piece.new(color)
+    indexes.each do |i|
+      @cells[i] = piece
+    end
   end
 
   def get_cell_with_xy(x, y)
