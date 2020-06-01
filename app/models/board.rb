@@ -17,7 +17,7 @@ class Board
       set_cell_with_index!(i, wall)
     end
     pp.each do |i|
-      color = i % 2
+      color = i % (@board_len + 1) == 0 ? Piece::WHITE : Piece::BLACK
       piece = Piece.new(color)
       set_cell_with_index!(i, piece)
     end
@@ -42,6 +42,12 @@ class Board
   def set_cell_with_index!(index, value)
     @cells[index] = value
   end
+
+  def empty?(x, y)
+    get_cell_with_xy(x, y).class == Empty
+  end
+
+  def flip_piece?(x, y, color); end
 
   def xy2index(x, y)
     line = y * @board_len # 行
