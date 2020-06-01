@@ -8,18 +8,18 @@ class Board
   def initialize(len = 4)
     @pirce_len = len.freeze
     @board_len = (1 + @pirce_len + 1)
-    @blocks = Array.new(@board_len * @board_len, Empty.new)
+    @cells = Array.new(@board_len * @board_len, Empty.new)
 
     ww = wall_indexes
     pp = center_indexes
     ww.each do |i|
       wall = Wall.new
-      set_block_with_index!(i, wall)
+      set_cell_with_index!(i, wall)
     end
     pp.each do |i|
       color = i % 2
       piece = Piece.new(color)
-      set_block_with_index!(i, piece)
+      set_cell_with_index!(i, piece)
     end
   end
 
@@ -27,20 +27,20 @@ class Board
     # update board
   end
 
-  def get_pieace_with_xy(x, y)
-    get_block_with_index(xy2index(x, y))
+  def get_cell_with_xy(x, y)
+    get_cell_with_index(xy2index(x, y))
   end
 
-  def set_pieace_with_xy!(x, y, value)
-    set_block_with_index!(xy2index(x, y), value)
+  def set_cell_with_xy!(x, y, value)
+    set_cell_with_index!(xy2index(x, y), value)
   end
 
-  def get_block_with_index(index)
-    @blocks[index]
+  def get_cell_with_index(index)
+    @cells[index]
   end
 
-  def set_block_with_index!(index, value)
-    @blocks[index] = value
+  def set_cell_with_index!(index, value)
+    @cells[index] = value
   end
 
   def xy2index(x, y)

@@ -10,15 +10,15 @@ class BoardController
     @board = board
   end
 
-  def get_pieace_with_xy(x, y)
-    @board.get_pieace_with_xy(x, y)
+  def get_cell_with_xy(x, y)
+    @board.get_cell_with_xy(x, y)
   end
 
-  def try_set_pieace_with_xy!(x, y, value)
-    block = @board.get_pieace_with_xy(x, y)
+  def try_set_cell_with_xy!(x, y, value)
+    block = @board.get_cell_with_xy(x, y)
     return false if block.class != Empty
 
-    @board.set_pieace_with_xy!(x, y, value)
+    @board.set_cell_with_xy!(x, y, value)
     true
   end
 end
