@@ -15,13 +15,14 @@ describe BoardView do
   let(:pb) { BoardView::BLACK.mark }
 
   it 'is valid render' do
-    v = <<~EOS.chomp
-      #{ [wa,wa,wa,wa,wa,wa].join }
-      #{ [wa,em,em,em,em,wa].join }
-      #{ [wa,em,pw,pb,em,wa].join }
-      #{ [wa,em,pb,pw,em,wa].join }
-      #{ [wa,em,em,em,em,wa].join }
-      #{ [wa,wa,wa,wa,wa,wa].join }
+    v = <<-EOS.chomp
+   0 1 2 3 4 5
+ 0#{ [wa,wa,wa,wa,wa,wa].join }
+ 1#{ [wa,em,em,em,em,wa].join }
+ 2#{ [wa,em,pw,pb,em,wa].join }
+ 3#{ [wa,em,pb,pw,em,wa].join }
+ 4#{ [wa,em,em,em,em,wa].join }
+ 5#{ [wa,wa,wa,wa,wa,wa].join }
     EOS
     l = [
       -1,-1,-1,-1,-1,-1,

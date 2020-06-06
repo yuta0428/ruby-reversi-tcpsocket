@@ -17,6 +17,8 @@ class BoardView
     cell_info_list
       .map { |type| type2mark(type) }
       .each_slice(@len).to_a
+      .map.with_index { |line, i| line.unshift(i.to_s.rjust(2)) }
+      .unshift(['  '] + (0..@len - 1).map { |i| i.to_s.rjust(2) })
       .map(&:join)
       .join("\n")
   end
