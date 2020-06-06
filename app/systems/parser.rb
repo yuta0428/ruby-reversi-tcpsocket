@@ -5,7 +5,8 @@ module Parser
     require 'json'
 
     def self.serialize(hash)
-      hash.to_json
+      # hash.to_json
+      JSON.generate(hash)
     end
 
     def self.deserialize(json)
