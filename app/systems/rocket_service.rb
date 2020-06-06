@@ -4,23 +4,29 @@ require './app/systems/request'
 require './app/systems/parser'
 
 module RocketService
-  # hash to string
-  def serialize(hash)
-    Parser::JsonParser.serialize(hash)
-  end
+  class << self
+    # hash to string
+    def serialize(hash)
+      Parser::JsonParser.serialize(hash)
+    end
 
-  # string to hash
-  def deserialize(payload)
-    Parser::JsonParser.deserialize(payload)
+    # string to hash
+    def deserialize(payload)
+      Parser::JsonParser.deserialize(payload)
+    end
   end
 
   # message sender
   class RocketSender
-    def self.wrap(context, status = nil)
-      if status.nil? then _wrap_for_request(context)
-      else _wrap_for_response(context, status)
-      end
-  end
+    def self.to_msg_req(context)
+      req = _wrap_for_request(context)
+      RocketService.serialize(req.to_hash)
+    end
+
+    def self.to_msg_res(context, status)
+      res = _wrap_for_response(context, status)
+      RocketService.serialize(res.to_hash)
+    end
 
     # send to request
     def self._wrap_for_request(param)
@@ -45,8 +51,13 @@ module RocketService
 
   # message receiver
   class RocketReceiver
-    def self.unwrap(hash)
-      if hash.key?(:status) then _unwrap_for_response(Responce.new(*hash.values))
+    def self.to_struct(msg)
+      hash = RocketService.deserialize(msg)
+      _unwrap(hash)
+    end
+
+    def self._unwrap(hash)
+      if hash.key?(:status) then _unwrap_for_response(Response.new(*hash.values))
       else _unwrap_for_request(Request.new(*hash.values))
       end
     end

@@ -9,7 +9,7 @@ module Parser
     end
 
     def self.deserialize(json)
-      JSON.parse(json)
+      JSON.parse(json, symbolize_names: true)
     end
   end
 end
