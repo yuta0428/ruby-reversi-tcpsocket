@@ -10,7 +10,7 @@ class RocketBooster
   end
 
   def accept
-    Rocket.new(@server.accept)
+    Rocket.new(@server.accept, true)
   end
 
   def close
@@ -25,8 +25,9 @@ end
 # socket wrapper with ruby
 class Rocket
   attr_reader :socket
-  def initialize(socket)
+  def initialize(socket, is_vervose = false)
     @socket = socket
+    @is_vervose = is_vervose
   end
 
   def close
@@ -34,11 +35,14 @@ class Rocket
   end
 
   def send(payload)
+    puts '[SEND]' + payload if @is_vervose
     @socket.puts(payload)
   end
 
   def receive
-    @socket.gets.chomp!
+    msg = @socket.gets.chomp!
+    puts '[RECV]' + msg if @is_vervose
+    msg
   end
 
   def wait
