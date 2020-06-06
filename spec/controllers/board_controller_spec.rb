@@ -132,4 +132,24 @@ describe BoardController do
       expect(@obj.get_cell_with_xy(2, 3).color).to eq Piece::WHITE
     end
   end
+
+  it 'is valid cell2type' do
+    expect(@obj.cell2type(Wall.new)).to eq(-1)
+    expect(@obj.cell2type(Empty.new)).to eq 0
+    expect(@obj.cell2type(Piece.new(Piece::WHITE))).to eq 1
+    expect(@obj.cell2type(Piece.new(Piece::BLACK))).to eq 2
+  end
+
+  it 'is valid to_view' do
+    list =
+      [
+        -1, -1, -1, -1, -1, -1,
+        -1,  0,  0,  0,  0, -1,
+        -1,  0,  1,  2,  0, -1,
+        -1,  0,  2,  1,  0, -1,
+        -1,  0,  0,  0,  0, -1,
+        -1, -1, -1, -1, -1, -1
+      ]
+    expect(@obj.to_view).to eq list
+  end
 end

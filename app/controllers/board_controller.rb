@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require './app/models/board'
+require './app/views/board_view'
+
 # BoardController
 class BoardController
   def initialize(board)
@@ -45,5 +48,25 @@ class BoardController
 
       indexes << @board.xy2index(x, y)
     end
+  end
+
+  def cell2type(cell)
+    case cell
+    when Wall then BoardView::WALL.type
+    when Empty then BoardView::EMPTY.type
+    when Piece
+      case cell.color
+      when Piece::WHITE then BoardView::WHITE.type
+      when Piece::BLACK then BoardView::BLACK.type
+      else 0
+      end
+    else 0
+    end
+  end
+
+  def to_view
+    (0..@board.board_len * @board.board_len - 1)
+      .map { |i| cell2type(@board.get_cell_with_index(i)) }
+      .to_a
   end
 end
