@@ -7,8 +7,7 @@ require './app/controllers/board_controller'
 describe BoardController do
   before do
     @len = 4
-    @obj = BoardController.new
-    @obj.register_board(board)
+    @obj = BoardController.new(board)
   end
 
   let(:board) { Board.new(@len) }

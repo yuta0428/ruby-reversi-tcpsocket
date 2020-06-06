@@ -2,11 +2,7 @@
 
 # BoardController
 class BoardController
-  def initialize
-    @board = nil
-  end
-
-  def register_board(board)
+  def initialize(board)
     @board = board
   end
 
