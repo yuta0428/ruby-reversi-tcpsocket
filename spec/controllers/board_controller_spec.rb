@@ -133,6 +133,21 @@ describe BoardController do
     end
   end
 
+  context 'is valid put_cell_any?' do
+    it 'is put_cell_any?' do
+      expect(@obj.put_cell_any?(Piece::WHITE)).to eq true
+      expect(@obj.put_cell_any?(Piece::BLACK)).to eq true
+    end
+  end
+
+  context 'is not put_cell_any?' do
+    let(:board) { Board.new(2) }
+    it 'is put_cell_any?' do
+      expect(@obj.put_cell_any?(Piece::WHITE)).to eq false
+      expect(@obj.put_cell_any?(Piece::BLACK)).to eq false
+    end
+  end
+
   it 'is valid cell2type' do
     expect(@obj.cell2type(Wall.new)).to eq(-1)
     expect(@obj.cell2type(Empty.new)).to eq 0

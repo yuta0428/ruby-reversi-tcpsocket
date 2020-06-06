@@ -50,6 +50,18 @@ class BoardController
     end
   end
 
+  def put_cell_any?(color)
+    (1..@board.pirce_len).each do |y|
+      (1..@board.pirce_len).each do |x|
+        next unless @board.empty?(x, y)
+
+        indexes = flip_pieces(x, y, color)
+        return true unless indexes.empty?
+      end
+    end
+    false
+  end
+
   def cell2type(cell)
     case cell
     when Wall then BoardView::WALL.type
