@@ -4,6 +4,8 @@ require './app/models/cell'
 
 # Board
 class Board
+  attr_reader :board_len, :pirce_len
+
   # Constructor
   def initialize(len = 4)
     @pirce_len = len.freeze
