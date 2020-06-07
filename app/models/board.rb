@@ -52,7 +52,9 @@ class Board
     get_cell_with_xy(x, y).class == Empty
   end
 
-  def flip_piece?(x, y, color); end
+  def select_only_pieces
+    @cells.select { |cell| cell.class == Piece }
+  end
 
   def xy2index(x, y)
     line = y * @board_len # 行

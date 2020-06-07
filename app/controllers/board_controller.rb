@@ -81,4 +81,9 @@ class BoardController
       .map { |i| cell2type(@board.get_cell_with_index(i)) }
       .to_a
   end
+
+  def cnt_with_color
+    pieces = @board.select_only_pieces
+    [Piece::WHITE, Piece::BLACK].map { |c| [c, pieces.count { |p| p.color == c }] }.to_h
+  end
 end

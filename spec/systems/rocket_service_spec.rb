@@ -27,7 +27,7 @@ describe RocketService do
   end
 
   context 'when PutPieceRequest' do
-    let(:request) { PutPieceRequest.new(input_type: 1, x: 1, y: 1, color: 0) }
+    let(:request) { PutPieceRequest.new(x: 1, y: 1, color: 0) }
     it { expect(req).to eq request }
   end
   context 'when PutPieceResponse' do
@@ -42,6 +42,11 @@ describe RocketService do
 
   context 'when TurnStartNotify' do
     let(:request) { TurnStartNotify.new }
+    it { expect(req).to eq request }
+  end
+
+  context 'when GameFinishNotify' do
+    let(:request) { GameFinishNotify.new(turn: 1, winner_player: player, result_num: {}) }
     it { expect(req).to eq request }
   end
 end

@@ -36,6 +36,7 @@ module RocketService
         when PutPieceRequest then Request.new(HEADER_PUT_PIECE, param)
         when GameStartNotify then Request.new(HEADER_GAME_START, param)
         when TurnStartNotify then Request.new(HEADER_TUEN_START, param)
+        when GameFinishNotify then Request.new(HEADER_GAME_FINISH, param)
         end
       req
     end
@@ -66,8 +67,9 @@ module RocketService
         case req.header
         when HEADER_JOIN then JoinRequest.new(req.param)
         when HEADER_PUT_PIECE then PutPieceRequest.new(req.param)
-        when HEADER_GAME_START then GameStartNotify.new
-        when HEADER_TUEN_START then TurnStartNotify.new
+        when HEADER_GAME_START then GameStartNotify.new(req.param)
+        when HEADER_TUEN_START then TurnStartNotify.new(req.param)
+        when HEADER_GAME_FINISH then GameFinishNotify.new(req.param)
         end
       [param, nil]
     end

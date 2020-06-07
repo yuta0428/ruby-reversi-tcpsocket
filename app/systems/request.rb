@@ -32,11 +32,18 @@ JoinResponse = Struct.new('JoinResponse', :player, keyword_init: true) do
 end
 
 HEADER_PUT_PIECE = 'put/piece'
-PutPieceRequest = Struct.new('PutPieceRequest', :input_type, :x, :y, :color, keyword_init: true)
+PutPieceRequest = Struct.new('PutPieceRequest', :x, :y, :color, keyword_init: true)
 PutPieceResponse = Struct.new('PutPieceResponse', :board, keyword_init: true)
 
 HEADER_GAME_START = 'game/start'
-GameStartNotify = Struct.new('GameStartNotify')
+GameStartNotify = Struct.new('GameStartNotify', keyword_init: true)
 
 HEADER_TUEN_START = 'turn/start'
-TurnStartNotify = Struct.new('TurnStartNotify')
+TurnStartNotify = Struct.new('TurnStartNotify', :turn, :is_myturn, keyword_init: true)
+
+HEADER_GAME_FINISH = 'game/finish'
+GameFinishNotify = Struct.new('GameFinishNotify', :turn, :winner_player, :result_num, keyword_init: true) do
+  def initialize(hash)
+    super(turn: turn, winner_player: PlayerObj.new(*hash[:winner_player].values), result_num: result_num)
+  end
+end
