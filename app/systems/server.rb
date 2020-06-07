@@ -3,6 +3,7 @@
 require './app/models/player'
 require './app/models/board'
 require './app/controllers/board_controller'
+require './app/systems/rocket'
 require './app/systems/rocket_service'
 require './app/systems/request'
 
@@ -51,7 +52,12 @@ class Server
       rocket.send(msg)
     end
 
-    # start game
+    # Notify start game for all player
+    @rocket_with_uuid.values.each do |rocket|
+      req = GameStartNotify.new
+      msg = RocketService::RocketSender.to_msg_req(req)
+      rocket.send(msg)
+    end
 
     ## wait my turn
 

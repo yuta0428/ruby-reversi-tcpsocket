@@ -5,31 +5,29 @@ require './app/systems/request'
 require './app/systems/rocket_service'
 
 describe RocketService do
-  context 'RocketSender' do
-    it 'is valid to_msg_req' do
-      context = JoinRequest.new(name: 'aaa')
-      msg = '{"header":"join","param":{"name":"aaa"}}'
-      expect(RocketService::RocketSender.to_msg_req(context)).to eq msg
+  context 'Request' do
+    let(:request) { JoinRequest.new(name: 'aaa') }
+    let(:msg) { '{"header":"game/join","param":{"name":"aaa"}}' }
+
+    it 'is valid RocketSender.to_msg_req' do
+      expect(RocketService::RocketSender.to_msg_req(request)).to eq msg
     end
 
-    it 'is valid to_msg_res' do
-      context = JoinResponse.new(player: {})
-      msg = '{"header":"join","body":{"player":{}},"status":200}'
-      expect(RocketService::RocketSender.to_msg_res(context, 200)).to eq msg
+    it 'is valid RocketReceiver.to_struct' do
+      expect(RocketService::RocketReceiver.to_struct(msg)).to eq [request, nil]
     end
   end
 
-  context 'RocketReceiver' do
-    it 'is valid to_struct Request' do
-      msg = '{"header":"join","param":{"name":"aaa"}}'
-      hash = JoinRequest.new(name: 'aaa')
-      expect(RocketService::RocketReceiver.to_struct(msg)).to eq [hash, nil]
+  context 'Response' do
+    let(:response) { JoinResponse.new(player: PlayerObj.new(4_122_914_363, 'aaaa', 1)) }
+    let(:msg) { '{"header":"game/join","body":{"player":{"id":4122914363,"name":"aaaa","color":1}},"status":200}' }
+
+    it 'is valid RocketSender.to_msg_res' do
+      expect(RocketService::RocketSender.to_msg_res(response, 200)).to eq msg
     end
 
-    it 'is valid to_struct Response' do
-      msg = '{"header":"join","body":{"player":{}},"status":200}'
-      hash = JoinResponse.new(player: {})
-      expect(RocketService::RocketReceiver.to_struct(msg)).to eq [hash, 200]
+    it 'is valid to_struct Request' do
+      expect(RocketService::RocketReceiver.to_struct(msg)).to eq [response, 200]
     end
   end
 end

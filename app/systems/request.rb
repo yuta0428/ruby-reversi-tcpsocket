@@ -23,10 +23,20 @@ end
 
 PlayerObj = Struct.new('PlayerObj', :id, :name, :color)
 
-HEADER_JOIN = 'join'
+HEADER_JOIN = 'game/join'
 JoinRequest = Struct.new('JoinRequest', :name, keyword_init: true)
-JoinResponse = Struct.new('JoinResponse', :player, keyword_init: true)
+JoinResponse = Struct.new('JoinResponse', :player, keyword_init: true) do
+  def initialize(hash)
+    super(player: PlayerObj.new(*hash[:player].values))
+  end
+end
 
-HEADER_PUT_PIECE = 'put_piece'
+HEADER_PUT_PIECE = 'put/piece'
 PutPieceRequest = Struct.new('PutPieceRequest', :input_type, :x, :y, :color, keyword_init: true)
 PutPieceResponse = Struct.new('PutPieceResponse', :board, keyword_init: true)
+
+HEADER_GAME_START = 'game/start'
+GameStartNotify = Struct.new('GameStartNotify')
+
+HEADER_TUEN_START = 'turn/start'
+TurnStartNotify = Struct.new('TurnStartNotify')
