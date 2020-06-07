@@ -53,10 +53,6 @@ module RocketService
   class RocketReceiver
     def self.to_struct(msg)
       hash = RocketService.deserialize(msg)
-      _unwrap(hash)
-    end
-
-    def self._unwrap(hash)
       if hash.key?(:status) then _unwrap_for_response(Response.new(*hash.values))
       else _unwrap_for_request(Request.new(*hash.values))
       end
@@ -66,8 +62,8 @@ module RocketService
     def self._unwrap_for_request(req)
       param =
         case req.header
-        when HEADER_JOIN then JoinRequest.new(*req.param.values)
-        when HEADER_PUT_PIECE then PutPieceRequest.new(*req.param.values)
+        when HEADER_JOIN then JoinRequest.new(req.param)
+        when HEADER_PUT_PIECE then PutPieceRequest.new(req.param)
         end
       [param, nil]
     end
@@ -77,7 +73,7 @@ module RocketService
       body =
         case res.header
         when HEADER_JOIN then JoinResponse.new
-        when HEADER_PUT_PIECE then PutPieceResponse.new(*res.body.values)
+        when HEADER_PUT_PIECE then PutPieceResponse.new(res.body)
         end
       [body, res.status]
     end
