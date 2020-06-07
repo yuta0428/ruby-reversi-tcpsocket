@@ -13,8 +13,8 @@ describe RocketService do
     end
 
     it 'is valid to_msg_res' do
-      context = JoinResponse.new
-      msg = '{"header":"join","body":{},"status":200}'
+      context = JoinResponse.new(player: {})
+      msg = '{"header":"join","body":{"player":{}},"status":200}'
       expect(RocketService::RocketSender.to_msg_res(context, 200)).to eq msg
     end
   end
@@ -27,8 +27,8 @@ describe RocketService do
     end
 
     it 'is valid to_struct Response' do
-      msg = '{"header":"join","body":{},"status":200}'
-      hash = JoinResponse.new
+      msg = '{"header":"join","body":{"player":{}},"status":200}'
+      hash = JoinResponse.new(player: {})
       expect(RocketService::RocketReceiver.to_struct(msg)).to eq [hash, 200]
     end
   end

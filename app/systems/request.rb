@@ -21,9 +21,11 @@ Response = Struct.new('Response', :header, :body, :status) do
   end
 end
 
+PlayerObj = Struct.new('PlayerObj', :id, :name, :color)
+
 HEADER_JOIN = 'join'
 JoinRequest = Struct.new('JoinRequest', :name, keyword_init: true)
-JoinResponse = Struct.new('JoinResponse', keyword_init: true)
+JoinResponse = Struct.new('JoinResponse', :player, keyword_init: true)
 
 HEADER_PUT_PIECE = 'put_piece'
 PutPieceRequest = Struct.new('PutPieceRequest', :input_type, :x, :y, :color, keyword_init: true)

@@ -72,7 +72,7 @@ module RocketService
     def self._unwrap_for_response(res)
       body =
         case res.header
-        when HEADER_JOIN then JoinResponse.new
+        when HEADER_JOIN then JoinResponse.new(res.body)
         when HEADER_PUT_PIECE then PutPieceResponse.new(res.body)
         end
       [body, res.status]

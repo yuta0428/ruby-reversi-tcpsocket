@@ -1,26 +1,29 @@
 # frozen_string_literal: true
 
+require './app/models/player'
 require './app/models/board'
 require './app/controllers/board_controller'
-require './app/systems/rocket'
 require './app/systems/rocket_service'
 require './app/systems/request'
 
 # Server
 class Server
+  JOIN_MAX = App::COLOR_LIST.length
+
   def initialize
     board = Board.new(App::CELL_NUM)
     @controller = BoardController.new(board)
     @server = RocketBooster.new(20_000)
-    @rocket_list = []
+    @rocket_with_uuid = {}
+    @player_list = []
   end
 
   def accept_end?
-    @rocket_list.length >= 2
+    @player_list.length >= JOIN_MAX
   end
 
   def main
-    # listen user
+    # Listen clients
     print 'Wait for connection...'
     Thread.new do
       until accept_end?
@@ -29,13 +32,21 @@ class Server
       end
     end
     until accept_end?
+      # Wait connection
       rocket = @server.accept
-      @rocket_list.push(rocket)
       puts
 
-      # connect and join request
-      rocket.wait
-      res = JoinResponse.new
+      # Wait join request
+      msg = rocket.wait
+      req, = RocketService::RocketReceiver.to_struct(msg)
+
+      # Create player data
+      p = Player.new(req.name, App::COLOR_LIST[@player_list.length])
+      @player_list.push(p)
+      @rocket_with_uuid.store(p.id, rocket)
+
+      # Return response to join player
+      res = JoinResponse.new(player: p.to_obj)
       msg = RocketService::RocketSender.to_msg_res(res, 200)
       rocket.send(msg)
     end
