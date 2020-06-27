@@ -37,7 +37,7 @@ class Server
       rocket = @server.accept
       puts
 
-      # Wait join request
+      # Wait JoinRequest
       msg = rocket.wait
       req, = RocketService::RocketReceiver.to_struct(msg)
 
@@ -46,63 +46,73 @@ class Server
       @player_list.push(p)
       @rocket_with_uuid.store(p.id, rocket)
 
-      # Return response to join player
+      # Return JoinResponse to join player
       res = JoinResponse.new(player: p.to_obj)
       msg = RocketService::RocketSender.to_msg_res(res, 200)
       rocket.send(msg)
     end
 
-    # Notify game start for all player
+    # GameStartNotify for all player
     @player_list.each do |player|
       rocket = @rocket_with_uuid[player.id]
-      req = GameStartNotify.new
+      req = GameStartNotify.new(board: @controller.to_view)
       msg = RocketService::RocketSender.to_msg_req(req)
       rocket.send(msg)
     end
 
     # Main Game Loop
     turn = 0
-    is_finished = false
-    winner_player = nil
-    unless is_finished
-      turn_player_idx = turn % player_list.length
+    loop do
+      turn_player_idx = turn % @player_list.length
       turn += 1
 
-      ## Notify turn tart for al player
+      # Send TurnStartNotify for al player
+      turn_rocket = nil
       @player_list.each_with_index do |player, i|
         rocket = @rocket_with_uuid[player.id]
         is_myturn = turn_player_idx == i
-        req = TurnStartNotify.new(turn, is_myturn)
+        req = TurnStartNotify.new(turn: turn, is_myturn: is_myturn)
+        msg = RocketService::RocketSender.to_msg_req(req)
+        rocket.send(msg)
+
+        turn_rocket = rocket if is_myturn
+      end
+
+      is_put = false
+      until is_put
+        # Wait player PutPieceRequest
+        msg = turn_rocket.wait
+        req, = RocketService::RocketReceiver.to_struct(msg)
+
+        # Return PutPieceResponse
+        is_put = @controller.try_set_cell_with_xy!(req.x, req.y, Piece.new(req.color))
+        status = 200
+        res = PutPieceResponse.new(is_ok: is_put)
+        msg = RocketService::RocketSender.to_msg_res(res, status)
+        turn_rocket.send(msg)
+      end
+
+      # Send TurnEndNotify for al player
+      is_finished = @player_list.any? { |p| @controller.put_cell_any?(p.color) == false }
+      @player_list.each_with_index do |player, _i|
+        rocket = @rocket_with_uuid[player.id]
+        req = TurnEndNotify.new(board: @controller.to_view, is_finished: is_finished)
         msg = RocketService::RocketSender.to_msg_req(req)
         rocket.send(msg)
       end
 
-      is_put = false
-      unless is_put
-        # Wait player put piece
-        msg = rocket.wait
-        req, = RocketService::RocketReceiver.to_struct(msg)
-
-        # Return put result
-        is_put = @controller.try_set_cell_with_xy!(req.x, req.y, Piece.new(req.color))
-        status = is_put ? 200 : 900
-        res = PutPieceResponse.new(board: @controller.to_view)
-        msg = RocketService::RocketSender.to_msg_res(res, status)
-        rocket.send(msg)
-      end
-
-      # Check finish game
-      @player_list.each do |player|
-        is_finished = @controller.put_cell_any?(player.color)
-        winner_player = player if is_finished
-      end
+      break if is_finished
     end
 
-    # Notify game finish for all player
+    # GameFinishNotify for all player
+    cnt_with_color = @controller.cnt_with_color
+    results = @player_list
+              .map(&:to_obj)
+              .map { |p| ResultObj.new(p, cnt_with_color[p.color]) }
+              .to_a
     @player_list.each do |player|
       rocket = @rocket_with_uuid[player.id]
-      cnt_with_color = @controller.cnt_with_color
-      req = GameFinishNotify.new(turn: turn, winner_player: winner_player.to_obj, result_num: cnt_with_color)
+      req = GameFinishNotify.new(turn: turn, results: results)
       msg = RocketService::RocketSender.to_msg_req(req)
       rocket.send(msg)
     end

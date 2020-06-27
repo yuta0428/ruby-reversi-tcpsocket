@@ -14,7 +14,7 @@ class BoardView
   end
 
   def render(cell_info_list)
-    cell_info_list
+    puts cell_info_list
       .map { |type| type2mark(type) }
       .each_slice(@len).to_a
       .map.with_index { |line, i| line.unshift(i.to_s.rjust(2)) }
@@ -30,6 +30,13 @@ class BoardView
     when WHITE.type then WHITE.mark
     when BLACK.type then BLACK.mark
     else '  '
+    end
+  end
+
+  def color2mark(color)
+    case color
+    when Piece::WHITE then WHITE.mark
+    when Piece::BLACK then BLACK.mark
     end
   end
 end
