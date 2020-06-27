@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+﻿# frozen_string_literal: true
 
 def to_deep_hash(obj)
   if obj.is_a?(Struct)
