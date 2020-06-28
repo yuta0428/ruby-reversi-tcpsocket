@@ -14,7 +14,7 @@ class Server
   def initialize
     board = Board.new(App::CELL_NUM)
     @controller = BoardController.new(board)
-    @server = RocketBooster.new(20_000)
+    @server = RocketBooster.new(20_000, true)
     @rocket_with_uuid = {}
     @player_list = []
   end
@@ -34,7 +34,7 @@ class Server
     end
     until accept_end?
       # Wait connection
-      rocket = @server.accept
+      rocket = @server.accept(true)
       puts
 
       # Wait JoinRequest

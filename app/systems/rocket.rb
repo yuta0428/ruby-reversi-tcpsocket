@@ -9,16 +9,16 @@ class RocketBooster
     @server = TCPServer.open(service)
   end
 
-  def accept
-    Rocket.new(@server.accept, true)
+  def accept(is_vervose = false)
+    Rocket.new(@server.accept, is_vervose)
   end
 
   def close
     @server.close
   end
 
-  def self.connect_server(host, service)
-    Rocket.new(TCPSocket.open(host, service))
+  def self.connect_server(host, service, is_vervose = false)
+    Rocket.new(TCPSocket.open(host, service), is_vervose)
   end
 end
 
