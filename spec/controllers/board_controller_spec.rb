@@ -10,38 +10,69 @@ describe BoardController do
     @obj = BoardController.new(board)
   end
 
-  let(:board) { Board.new(@len) }
+  context 'when Simple Board' do
+    let(:board) { Board.new(@len) }
 
-  it 'is valid Wall' do
-    expect(@obj.get_cell_with_xy(0, 0)).to be_an_instance_of Wall
-    expect(@obj.get_cell_with_xy(0, 1)).to be_an_instance_of Wall
-    expect(@obj.get_cell_with_xy(5, 1)).to be_an_instance_of Wall
-    expect(@obj.get_cell_with_xy(5, 5)).to be_an_instance_of Wall
+    it 'is valid Wall' do
+      expect(@obj.get_cell_with_xy(0, 0)).to be_an_instance_of Wall
+      expect(@obj.get_cell_with_xy(0, 1)).to be_an_instance_of Wall
+      expect(@obj.get_cell_with_xy(5, 1)).to be_an_instance_of Wall
+      expect(@obj.get_cell_with_xy(5, 5)).to be_an_instance_of Wall
+    end
+
+    it 'is valid Empty' do
+      expect(@obj.get_cell_with_xy(1, 1)).to be_an_instance_of Empty
+    end
+
+    it 'is valid Piece center' do
+      p = @obj.get_cell_with_xy(2, 2)
+      expect(p).to be_an_instance_of Piece
+      expect(p.color).to eq Piece::WHITE
+
+      p = @obj.get_cell_with_xy(3, 3)
+      expect(p).to be_an_instance_of Piece
+      expect(p.color).to eq Piece::WHITE
+
+      p = @obj.get_cell_with_xy(3, 2)
+      expect(p).to be_an_instance_of Piece
+      expect(p.color).to eq Piece::BLACK
+
+      p = @obj.get_cell_with_xy(2, 3)
+      expect(p).to be_an_instance_of Piece
+      expect(p.color).to eq Piece::BLACK
+    end
+
+    it 'is valid cell2type' do
+      expect(@obj.cell2type(Wall.new)).to eq(-1)
+      expect(@obj.cell2type(Empty.new)).to eq 0
+      expect(@obj.cell2type(Piece.new(Piece::WHITE))).to eq 1
+      expect(@obj.cell2type(Piece.new(Piece::BLACK))).to eq 2
+    end
+
+    it 'is valid to_view' do
+      list =
+        [
+          -1, -1, -1, -1, -1, -1,
+          -1,  0,  0,  0,  0, -1,
+          -1,  0,  1,  2,  0, -1,
+          -1,  0,  2,  1,  0, -1,
+          -1,  0,  0,  0,  0, -1,
+          -1, -1, -1, -1, -1, -1
+        ]
+      expect(@obj.to_view).to eq list
+    end
+
+    it 'is valid cnt_with_color' do
+      cnt_with_color =
+        {
+          Piece::WHITE => 2,
+          Piece::BLACK => 2
+        }
+      expect(@obj.cnt_with_color).to eq cnt_with_color
+    end
   end
 
-  it 'is valid Empty' do
-    expect(@obj.get_cell_with_xy(1, 1)).to be_an_instance_of Empty
-  end
-
-  it 'is valid Piece center' do
-    p = @obj.get_cell_with_xy(2, 2)
-    expect(p).to be_an_instance_of Piece
-    expect(p.color).to eq Piece::WHITE
-
-    p = @obj.get_cell_with_xy(3, 3)
-    expect(p).to be_an_instance_of Piece
-    expect(p.color).to eq Piece::WHITE
-
-    p = @obj.get_cell_with_xy(3, 2)
-    expect(p).to be_an_instance_of Piece
-    expect(p.color).to eq Piece::BLACK
-
-    p = @obj.get_cell_with_xy(2, 3)
-    expect(p).to be_an_instance_of Piece
-    expect(p.color).to eq Piece::BLACK
-  end
-
-  context 'is valid set Piece' do
+  context 'when set piece' do
     let(:board) { Board.new(@len) }
     let(:piece) { Piece.new(Piece::BLACK) }
     it 'is not able to set Piece on Wall' do
@@ -58,7 +89,7 @@ describe BoardController do
     end
   end
 
-  context 'is valid flip up, down, right, left' do
+  context 'when flip up, down, right, left' do
     let(:board) { Board.new(@len) }
     it 'is flip_cell_indexes_with_dir down' do
       expect(@obj.flip_cell_indexes_with_dir(2, 1, Piece::BLACK, 0, 1)).to eq [14]
@@ -78,7 +109,7 @@ describe BoardController do
     end
   end
 
-  context 'is valid flip up right&left, down right&left' do
+  context 'when flip up right&left, down right&left' do
     let(:board) do
       b = Board.new(@len)
       b.set_cell_with_xy!(2, 2, Piece.new(Piece::BLACK))
@@ -107,7 +138,7 @@ describe BoardController do
     end
   end
 
-  context 'is not able flip' do
+  context 'when be not able to flip' do
     let(:board) do
       b = Board.new(@len)
       b.set_cell_with_xy!(2, 2, Piece.new(Piece::BLACK))
@@ -124,7 +155,7 @@ describe BoardController do
     end
   end
 
-  context 'is valid try_set_cell_with_xy' do
+  context 'when intergration try_set_cell_with_xy' do
     let(:board) { Board.new(@len) }
     it 'is try_set_cell_with_xy' do
       expect(@obj.get_cell_with_xy(2, 3).color).to eq Piece::BLACK
@@ -133,38 +164,19 @@ describe BoardController do
     end
   end
 
-  context 'is valid put_cell_any?' do
+  context 'when any empty cell board' do
+    let(:board) { Board.new(@len) }
     it 'is put_cell_any?' do
       expect(@obj.put_cell_any?(Piece::WHITE)).to eq true
       expect(@obj.put_cell_any?(Piece::BLACK)).to eq true
     end
   end
 
-  context 'is not put_cell_any?' do
+  context 'when not empty cell board' do
     let(:board) { Board.new(2) }
     it 'is put_cell_any?' do
       expect(@obj.put_cell_any?(Piece::WHITE)).to eq false
       expect(@obj.put_cell_any?(Piece::BLACK)).to eq false
     end
-  end
-
-  it 'is valid cell2type' do
-    expect(@obj.cell2type(Wall.new)).to eq(-1)
-    expect(@obj.cell2type(Empty.new)).to eq 0
-    expect(@obj.cell2type(Piece.new(Piece::WHITE))).to eq 1
-    expect(@obj.cell2type(Piece.new(Piece::BLACK))).to eq 2
-  end
-
-  it 'is valid to_view' do
-    list =
-      [
-        -1, -1, -1, -1, -1, -1,
-        -1,  0,  0,  0,  0, -1,
-        -1,  0,  1,  2,  0, -1,
-        -1,  0,  2,  1,  0, -1,
-        -1,  0,  0,  0,  0, -1,
-        -1, -1, -1, -1, -1, -1
-      ]
-    expect(@obj.to_view).to eq list
   end
 end
