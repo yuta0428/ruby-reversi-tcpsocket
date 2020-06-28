@@ -2,6 +2,7 @@
 
 require 'spec_helper'
 require './app/views/board_view'
+require './app/models/cell'
 
 describe BoardView do
   before do
@@ -40,5 +41,10 @@ describe BoardView do
     expect(@obj.type2mark(0)).to eq em
     expect(@obj.type2mark(1)).to eq pw
     expect(@obj.type2mark(2)).to eq pb
+  end
+
+  it 'is valid color2mark' do
+    expect(@obj.color2mark(Piece::WHITE)).to eq pw
+    expect(@obj.color2mark(Piece::BLACK)).to eq pb
   end
 end
