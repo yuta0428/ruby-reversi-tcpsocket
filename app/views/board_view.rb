@@ -14,7 +14,7 @@ class BoardView
   end
 
   def render(cell_info_list)
-    puts cell_info_list
+    cell_info_list
       .map { |type| type2mark(type) }
       .each_slice(@len).to_a
       .map.with_index { |line, i| line.unshift(i.to_s.rjust(2)) }

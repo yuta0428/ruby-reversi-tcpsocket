@@ -42,7 +42,7 @@ class Client
     msg = @rocket.wait
     req, = RocketService::RocketReceiver.to_struct(msg)
     puts '======== [GAME START] ========'
-    @view.render(req.board)
+    puts @view.render(req.board)
 
     # Main Game Loop
     loop do
@@ -87,7 +87,7 @@ class Client
         break
       end
 
-      @view.render(req.board)
+      puts @view.render(req.board)
       break if is_finished
     end
 
