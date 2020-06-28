@@ -14,7 +14,7 @@ class Server
   def initialize
     board = Board.new(App::CELL_NUM)
     @controller = BoardController.new(board)
-    @server = RocketBooster.new(20_000, true)
+    @server = RocketBooster.new(20_000)
     @rocket_with_uuid = {}
     @player_list = []
   end
