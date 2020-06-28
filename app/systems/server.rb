@@ -63,14 +63,15 @@ class Server
     # Main Game Loop
     turn = 0
     loop do
-      turn_player_idx = turn % @player_list.length
+      curr_turn_player_idx = turn % @player_list.length
       turn += 1
+      next_turn_player_idx = turn % @player_list.length
 
       # Send TurnStartNotify for al player
       turn_rocket = nil
       @player_list.each_with_index do |player, i|
         rocket = @rocket_with_uuid[player.id]
-        is_myturn = turn_player_idx == i
+        is_myturn = curr_turn_player_idx == i
         req = TurnStartNotify.new(turn: turn, is_myturn: is_myturn)
         msg = RocketService::RocketSender.to_msg_req(req)
         rocket.send(msg)
@@ -93,7 +94,7 @@ class Server
       end
 
       # Send TurnEndNotify for al player
-      is_finished = @player_list.any? { |p| @controller.put_cell_any?(p.color) == false }
+      is_finished = @controller.put_cell_any?(@player_list[next_turn_player_idx].color) == false
       @player_list.each_with_index do |player, _i|
         rocket = @rocket_with_uuid[player.id]
         req = TurnEndNotify.new(board: @controller.to_view, is_finished: is_finished)
